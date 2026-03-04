@@ -189,7 +189,12 @@ def get_stats():
     Estatísticas gerais: total de alunos, INDE médio por ano,
     distribuição por pedra e contagem de alunos em risco.
     """
-    df = _carregar_analytics()
+    try:
+        df = _carregar_analytics()
+    except Exception as e:
+        import traceback
+        raise HTTPException(status_code=500, detail=f"Erro ao carregar dados: {str(e)}\n{traceback.format_exc()}")
+
     df_validos = df.dropna(subset=['Defasagem'])
     df_validos = df_validos[pd.to_numeric(df_validos['Defasagem'], errors='coerce').notna()]
     df_validos['Defasagem'] = df_validos['Defasagem'].astype(float).astype(int)
