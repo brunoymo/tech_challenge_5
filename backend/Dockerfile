@@ -7,7 +7,7 @@ WORKDIR /install
 COPY requirements.txt .
 
 RUN pip install --upgrade pip && \
-    pip install --prefix=/install/deps --no-cache-dir -r requirements.txt
+  pip install --prefix=/install/deps --no-cache-dir -r requirements.txt
 
 
 # --- Stage 2: Production ---
@@ -22,9 +22,16 @@ COPY --from=builder /install/deps /usr/local
 COPY app/ ./app/
 COPY src/ ./src/
 
-# Copy pre-trained model and data (must exist before building)
+# Copy pre-trained model artifacts
 COPY model/ ./model/
-COPY data/ ./data/
+
+# Copy data files explicitly (one-by-one to ensure they are included by Docker)
+RUN mkdir -p ./data/raw
+COPY data/raw/dataset_2022.csv ./data/raw/dataset_2022.csv
+COPY data/raw/dataset_2023.csv ./data/raw/dataset_2023.csv
+COPY data/raw/dataset_2024.csv ./data/raw/dataset_2024.csv
+RUN ls -la data/raw/
+
 
 # Expose the port that Uvicorn will listen on
 EXPOSE 8000
