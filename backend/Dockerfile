@@ -15,6 +15,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# Cache bust: change this value to force full rebuild on Render
+ARG CACHEBUST=2026030401
+
 # Copy installed packages from builder stage
 COPY --from=builder /install/deps /usr/local
 
