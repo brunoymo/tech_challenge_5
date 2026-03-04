@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { BrainCircuit, AlertTriangle, CheckCircle2, Loader2, RotateCcw, Info } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://passos-magicos-api-chcj.onrender.com';
 
 // ── Configuração dos campos ────────────────────────────────────────────────
 const FIELDS = [
-  { name: 'Idade', label: 'Idade',               step: '1',   min: 6,  max: 30,  desc: 'Idade do aluno em anos' },
-  { name: 'Fase',  label: 'Fase',                step: '1',   min: 0,  max: 8,   desc: '0 = ALFA, 1–8 = fases escolares' },
-  { name: 'IAA',   label: 'IAA · Autoavaliação',  step: '0.1', min: 0,  max: 10,  desc: 'Índice de Autoavaliação do Aluno' },
-  { name: 'IEG',   label: 'IEG · Engajamento',    step: '0.1', min: 0,  max: 10,  desc: 'Índice de Engajamento' },
-  { name: 'IPS',   label: 'IPS · Psicossocial',   step: '0.1', min: 0,  max: 10,  desc: 'Índice Psicossocial' },
-  { name: 'IDA',   label: 'IDA · Aprendizagem',   step: '0.1', min: 0,  max: 10,  desc: 'Índice de Desenvolvimento do Aprendizado' },
-  { name: 'IPV',   label: 'IPV · Ponto de Virada', step: '0.1', min: 0, max: 10,  desc: 'Índice do Ponto de Virada' },
-  { name: 'IAN',   label: 'IAN · Adequação',       step: '0.1', min: 0, max: 10,  desc: 'Índice de Adequação ao Nível' },
-  { name: 'INDE',  label: 'INDE · Índice Geral',   step: '0.1', min: 0, max: 10,  desc: 'Índice de Desenvolvimento Educacional', highlight: true as const },
+  { name: 'Idade', label: 'Idade', step: '1', min: 6, max: 30, desc: 'Idade do aluno em anos' },
+  { name: 'Fase', label: 'Fase', step: '1', min: 0, max: 8, desc: '0 = ALFA, 1–8 = fases escolares' },
+  { name: 'IAA', label: 'IAA · Autoavaliação', step: '0.1', min: 0, max: 10, desc: 'Índice de Autoavaliação do Aluno' },
+  { name: 'IEG', label: 'IEG · Engajamento', step: '0.1', min: 0, max: 10, desc: 'Índice de Engajamento' },
+  { name: 'IPS', label: 'IPS · Psicossocial', step: '0.1', min: 0, max: 10, desc: 'Índice Psicossocial' },
+  { name: 'IDA', label: 'IDA · Aprendizagem', step: '0.1', min: 0, max: 10, desc: 'Índice de Desenvolvimento do Aprendizado' },
+  { name: 'IPV', label: 'IPV · Ponto de Virada', step: '0.1', min: 0, max: 10, desc: 'Índice do Ponto de Virada' },
+  { name: 'IAN', label: 'IAN · Adequação', step: '0.1', min: 0, max: 10, desc: 'Índice de Adequação ao Nível' },
+  { name: 'INDE', label: 'INDE · Índice Geral', step: '0.1', min: 0, max: 10, desc: 'Índice de Desenvolvimento Educacional', highlight: true as const },
 ];
 
 type FieldName = (typeof FIELDS)[number]['name'];
@@ -26,9 +26,9 @@ const DEFAULT: FormData = {
 
 // ── Componente principal ───────────────────────────────────────────────────
 export default function Predictor() {
-  const [form,    setForm]    = useState<FormData>(DEFAULT);
+  const [form, setForm] = useState<FormData>(DEFAULT);
   const [loading, setLoading] = useState(false);
-  const [result,  setResult]  = useState<{ risco: number; prob: number } | null>(null);
+  const [result, setResult] = useState<{ risco: number; prob: number } | null>(null);
   const [tooltip, setTooltip] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,11 +129,10 @@ export default function Predictor() {
                       step={f.step}
                       min={f.min}
                       max={f.max}
-                      className={`w-full px-3 py-2.5 rounded-xl border text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:border-transparent ${
-                        f.highlight
+                      className={`w-full px-3 py-2.5 rounded-xl border text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:border-transparent ${f.highlight
                           ? 'border-indigo-200 bg-indigo-50/40 text-indigo-700 focus:ring-indigo-400'
                           : 'border-slate-200 bg-white text-slate-700 focus:ring-indigo-400'
-                      }`}
+                        }`}
                     />
                     {/* Mini barra de progresso dentro do campo */}
                     <div className="absolute bottom-0 left-3 right-3 h-0.5 bg-slate-100 rounded-full overflow-hidden">
@@ -164,13 +163,12 @@ export default function Predictor() {
         <div className="lg:col-span-2 flex flex-col gap-5">
 
           {/* Card de resultado */}
-          <div className={`flex-1 rounded-2xl border shadow-sm flex flex-col items-center justify-center p-6 min-h-64 transition-all duration-500 ${
-            !result
+          <div className={`flex-1 rounded-2xl border shadow-sm flex flex-col items-center justify-center p-6 min-h-64 transition-all duration-500 ${!result
               ? 'bg-white border-slate-100'
               : result.risco === 1
                 ? 'bg-red-50 border-red-100'
                 : 'bg-emerald-50 border-emerald-100'
-          }`}>
+            }`}>
             {!result && !loading && (
               <div className="text-center text-slate-300 space-y-3">
                 <BrainCircuit className="w-14 h-14 mx-auto opacity-40" />
@@ -227,12 +225,12 @@ export default function Predictor() {
             <div className="space-y-1.5">
               {[
                 ['INDE', 'Índice de Desenvolvimento Educacional'],
-                ['IAA',  'Índice de Autoavaliação'],
-                ['IEG',  'Índice de Engajamento'],
-                ['IPS',  'Índice Psicossocial'],
-                ['IDA',  'Índice de Aprendizagem'],
-                ['IPV',  'Índice do Ponto de Virada'],
-                ['IAN',  'Índice de Adequação ao Nível'],
+                ['IAA', 'Índice de Autoavaliação'],
+                ['IEG', 'Índice de Engajamento'],
+                ['IPS', 'Índice Psicossocial'],
+                ['IDA', 'Índice de Aprendizagem'],
+                ['IPV', 'Índice do Ponto de Virada'],
+                ['IAN', 'Índice de Adequação ao Nível'],
               ].map(([abbr, full]) => (
                 <div key={abbr} className="flex items-start gap-2">
                   <span className="text-[11px] font-black text-indigo-600 w-8 shrink-0 mt-0.5">{abbr}</span>

@@ -47,7 +47,7 @@ export default function App() {
   const [apiStatus, setApiStatus] = useState<'checking' | 'online' | 'offline'>('checking');
 
   useEffect(() => {
-    const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+    const API_URL = import.meta.env.VITE_API_URL || 'https://passos-magicos-api-chcj.onrender.com';
     fetch(`${API_URL}/health`)
       .then((r) => r.json())
       .then((d) => setApiStatus(d.model_loaded ? 'online' : 'offline'))
@@ -81,11 +81,10 @@ export default function App() {
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
-                className={`w-full flex items-center justify-between px-3 py-3 rounded-xl transition-all group ${
-                  active
+                className={`w-full flex items-center justify-between px-3 py-3 rounded-xl transition-all group ${active
                     ? 'bg-indigo-50 text-indigo-700'
                     : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
-                }`}
+                  }`}
               >
                 <div className="flex items-center space-x-3">
                   <span className={active ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'}>
@@ -104,24 +103,21 @@ export default function App() {
 
         {/* API Status */}
         <div className="p-4 border-t border-slate-100">
-          <div className={`rounded-xl px-4 py-3 border flex items-center justify-between ${
-            apiStatus === 'online'   ? 'bg-emerald-50 border-emerald-100' :
-            apiStatus === 'offline'  ? 'bg-red-50 border-red-100' :
-                                       'bg-amber-50 border-amber-100'
-          }`}>
+          <div className={`rounded-xl px-4 py-3 border flex items-center justify-between ${apiStatus === 'online' ? 'bg-emerald-50 border-emerald-100' :
+              apiStatus === 'offline' ? 'bg-red-50 border-red-100' :
+                'bg-amber-50 border-amber-100'
+            }`}>
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Status da API</p>
-              <p className={`text-sm font-bold mt-0.5 ${
-                apiStatus === 'online' ? 'text-emerald-700' :
-                apiStatus === 'offline' ? 'text-red-700' : 'text-amber-700'
-              }`}>
+              <p className={`text-sm font-bold mt-0.5 ${apiStatus === 'online' ? 'text-emerald-700' :
+                  apiStatus === 'offline' ? 'text-red-700' : 'text-amber-700'
+                }`}>
                 {apiStatus === 'online' ? 'Modelo Online' : apiStatus === 'offline' ? 'API Offline' : 'Verificando…'}
               </p>
             </div>
-            <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${
-              apiStatus === 'online'  ? 'bg-emerald-500 animate-pulse' :
-              apiStatus === 'offline' ? 'bg-red-500' : 'bg-amber-400 animate-pulse'
-            }`} />
+            <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${apiStatus === 'online' ? 'bg-emerald-500 animate-pulse' :
+                apiStatus === 'offline' ? 'bg-red-500' : 'bg-amber-400 animate-pulse'
+              }`} />
           </div>
           <p className="text-[10px] text-slate-400 text-center mt-3">
             FIAP · Machine Learning · Fase 5
@@ -140,7 +136,7 @@ export default function App() {
         <div className="p-6 md:p-8">
           {activeTab === 'analytics' && <Analytics />}
           {activeTab === 'predictor' && <Predictor />}
-          {activeTab === 'metrics'   && <ModelMetrics />}
+          {activeTab === 'metrics' && <ModelMetrics />}
         </div>
       </main>
     </div>

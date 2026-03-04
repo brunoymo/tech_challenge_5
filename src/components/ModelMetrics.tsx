@@ -5,26 +5,26 @@ import {
 } from 'recharts';
 import { CheckCircle2, Loader2, Target, Layers, TrendingUp } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://passos-magicos-api-chcj.onrender.com';
 
 // ── Tipos ──────────────────────────────────────────────────────────────────
 interface Metrics {
-  accuracy:          number;
-  roc_auc:           number;
-  f1:                number;
-  precision:         number;
-  recall:            number;
-  confusion_matrix:  number[][];
-  roc_curve:         { fpr: number[]; tpr: number[] };
-  n_amostras:        number;
-  n_treino:          number;
-  n_teste:           number;
+  accuracy: number;
+  roc_auc: number;
+  f1: number;
+  precision: number;
+  recall: number;
+  confusion_matrix: number[][];
+  roc_curve: { fpr: number[]; tpr: number[] };
+  n_amostras: number;
+  n_treino: number;
+  n_teste: number;
 }
 interface FeatImportance { feature: string; importance: number }
 
 // ── Hook ───────────────────────────────────────────────────────────────────
 function useFetch<T>(url: string) {
-  const [data, setData]       = useState<T | null>(null);
+  const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch(url)
@@ -72,7 +72,7 @@ function Offline() {
 // ── Componente principal ───────────────────────────────────────────────────
 export default function ModelMetrics() {
   const { data: metrics, loading: lMetrics } = useFetch<Metrics>(`${API_URL}/metrics`);
-  const { data: fi,      loading: lFi }      = useFetch<FeatImportance[]>(`${API_URL}/feature-importance`);
+  const { data: fi, loading: lFi } = useFetch<FeatImportance[]>(`${API_URL}/feature-importance`);
 
   // Curva ROC como array de pontos
   const rocData = metrics
@@ -85,12 +85,12 @@ export default function ModelMetrics() {
   // Métricas principais
   const METRIC_ROWS = metrics
     ? [
-        { label: 'ROC-AUC',   value: metrics.roc_auc,  color: 'bg-indigo-500',  text: 'text-indigo-700'  },
-        { label: 'Accuracy',  value: metrics.accuracy, color: 'bg-emerald-500', text: 'text-emerald-700' },
-        { label: 'F1-Score',  value: metrics.f1,       color: 'bg-amber-500',   text: 'text-amber-700'   },
-        { label: 'Precision', value: metrics.precision, color: 'bg-blue-500',   text: 'text-blue-700'    },
-        { label: 'Recall',    value: metrics.recall,   color: 'bg-rose-500',    text: 'text-rose-700'    },
-      ]
+      { label: 'ROC-AUC', value: metrics.roc_auc, color: 'bg-indigo-500', text: 'text-indigo-700' },
+      { label: 'Accuracy', value: metrics.accuracy, color: 'bg-emerald-500', text: 'text-emerald-700' },
+      { label: 'F1-Score', value: metrics.f1, color: 'bg-amber-500', text: 'text-amber-700' },
+      { label: 'Precision', value: metrics.precision, color: 'bg-blue-500', text: 'text-blue-700' },
+      { label: 'Recall', value: metrics.recall, color: 'bg-rose-500', text: 'text-rose-700' },
+    ]
     : [];
 
   return (
@@ -170,17 +170,16 @@ export default function ModelMetrics() {
                 <div key={ri} className="flex items-center space-x-2">
                   <span className="w-12 text-right text-xs font-semibold text-slate-400 shrink-0">{rowLabel}</span>
                   {metrics.confusion_matrix[ri].map((val, ci) => {
-                    const isCorrect  = ri === ci;
-                    const total      = metrics.n_teste;
-                    const pct        = ((val / total) * 100).toFixed(1);
+                    const isCorrect = ri === ci;
+                    const total = metrics.n_teste;
+                    const pct = ((val / total) * 100).toFixed(1);
                     return (
                       <div
                         key={ci}
-                        className={`w-24 h-16 rounded-xl flex flex-col items-center justify-center border-2 ${
-                          isCorrect
+                        className={`w-24 h-16 rounded-xl flex flex-col items-center justify-center border-2 ${isCorrect
                             ? 'bg-emerald-50 border-emerald-200'
                             : val === 0 ? 'bg-slate-50 border-slate-100' : 'bg-red-50 border-red-200'
-                        }`}
+                          }`}
                       >
                         <span className={`text-2xl font-black ${isCorrect ? 'text-emerald-700' : val === 0 ? 'text-slate-300' : 'text-red-600'}`}>
                           {val}
@@ -266,8 +265,8 @@ export default function ModelMetrics() {
           <div>
             <p className="text-sm font-bold text-amber-800">Sobre a dominância do IAN</p>
             <p className="text-sm text-amber-700 mt-1">
-              O <strong>IAN</strong> (Índice de Adequação ao Nível) é calculado a partir da relação entre a fase atual e a fase ideal do aluno, sendo matematicamente correlacionado com a defasagem. 
-              Isso explica sua importância de {(fi[0].importance * 100).toFixed(1)}% no modelo. Em um cenário prospectivo (prever antes do cálculo do IAN), 
+              O <strong>IAN</strong> (Índice de Adequação ao Nível) é calculado a partir da relação entre a fase atual e a fase ideal do aluno, sendo matematicamente correlacionado com a defasagem.
+              Isso explica sua importância de {(fi[0].importance * 100).toFixed(1)}% no modelo. Em um cenário prospectivo (prever antes do cálculo do IAN),
               os demais indicadores como INDE, Fase e IDA ganham mais relevância.
             </p>
           </div>

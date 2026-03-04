@@ -5,31 +5,31 @@ import {
 } from 'recharts';
 import { Users, TrendingUp, Award, AlertCircle, Loader2 } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://passos-magicos-api-chcj.onrender.com';
 
 // ── Tipos ─────────────────────────────────────────────────────────────────
 interface Stats {
-  total_alunos:  number;
-  em_risco:      number;
-  pct_risco:     number;
-  inde_medio:    number;
-  inde_por_ano:  { ano: number; INDE: number }[];
-  dist_pedras:   { pedra: string; quantidade: number }[];
+  total_alunos: number;
+  em_risco: number;
+  pct_risco: number;
+  inde_medio: number;
+  inde_por_ano: { ano: number; INDE: number }[];
+  dist_pedras: { pedra: string; quantidade: number }[];
 }
 interface EvolRow { ano: number; INDE?: number; IAA?: number; IEG?: number; IDA?: number; IPV?: number; IAN?: number }
 interface RiscoFase { fase: number; total: number; em_risco: number; pct_risco: number }
 
 interface FeatureImportance {
-  feature:    string;
+  feature: string;
   importance: number;
 }
 
 interface Metrics {
-  accuracy:  number;
-  roc_auc:   number;
-  f1:        number;
+  accuracy: number;
+  roc_auc: number;
+  f1: number;
   precision: number;
-  recall:    number;
+  recall: number;
 }
 
 // ── Cores ──────────────────────────────────────────────────────────────────
@@ -38,15 +38,15 @@ const PEDRA_COLORS: Record<string, string> = {
 };
 const LINES = [
   { key: 'INDE', color: '#6366f1', label: 'INDE' },
-  { key: 'IAA',  color: '#10b981', label: 'IAA'  },
-  { key: 'IEG',  color: '#f59e0b', label: 'IEG'  },
-  { key: 'IDA',  color: '#ef4444', label: 'IDA'  },
-  { key: 'IPV',  color: '#3b82f6', label: 'IPV'  },
+  { key: 'IAA', color: '#10b981', label: 'IAA' },
+  { key: 'IEG', color: '#f59e0b', label: 'IEG' },
+  { key: 'IDA', color: '#ef4444', label: 'IDA' },
+  { key: 'IPV', color: '#3b82f6', label: 'IPV' },
 ];
 
 // ── Hook reutilizável ──────────────────────────────────────────────────────
 function useFetch<T>(url: string) {
-  const [data, setData]       = useState<T | null>(null);
+  const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch(url)
@@ -95,13 +95,13 @@ const fmtTooltip = (v: number) => v.toFixed(2);
 
 // ── Componente principal ───────────────────────────────────────────────────
 export default function Analytics() {
-  const { data: stats,    loading: lStats }   = useFetch<Stats>(`${API_URL}/analytics/stats`);
+  const { data: stats, loading: lStats } = useFetch<Stats>(`${API_URL}/analytics/stats`);
   const { data: evolucao, loading: lEvolucao } = useFetch<EvolRow[]>(`${API_URL}/analytics/evolucao`);
-  const { data: riscoFase, loading: lRisco }  = useFetch<RiscoFase[]>(`${API_URL}/analytics/risco-por-fase`);
-  
+  const { data: riscoFase, loading: lRisco } = useFetch<RiscoFase[]>(`${API_URL}/analytics/risco-por-fase`);
+
   // Model endpoints
-  const { data: fi,       loading: lFi }      = useFetch<FeatureImportance[]>(`${API_URL}/feature-importance`);
-  const { data: metrics,  loading: lMetrics } = useFetch<Metrics>(`${API_URL}/metrics`);
+  const { data: fi, loading: lFi } = useFetch<FeatureImportance[]>(`${API_URL}/feature-importance`);
+  const { data: metrics, loading: lMetrics } = useFetch<Metrics>(`${API_URL}/metrics`);
 
   const dataPedras = (stats?.dist_pedras ?? []).map(p => ({
     name: p.pedra, value: p.quantidade, color: PEDRA_COLORS[p.pedra] ?? '#6366f1',
@@ -264,7 +264,7 @@ export default function Analytics() {
 
       {/* ── Linha 3: ML Insights ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
+
         <Card title="Importância das Features (Modelo ML)">
           {lFi ? <Skeleton /> : !fi ? (
             <div className="h-64 flex items-center justify-center text-slate-400 text-sm">
@@ -286,18 +286,18 @@ export default function Analytics() {
         </Card>
 
         <Card title="Métricas do Modelo Preditivo">
-           {lMetrics ? <Skeleton /> : !metrics ? (
+          {lMetrics ? <Skeleton /> : !metrics ? (
             <div className="h-64 flex items-center justify-center text-slate-400 text-sm">
               Modelo ainda não treinado.
             </div>
           ) : (
             <div className="space-y-4 mt-2">
               {[
-                { label: 'ROC-AUC',   value: metrics.roc_auc,  color: 'bg-indigo-500' },
-                { label: 'Accuracy',  value: metrics.accuracy, color: 'bg-emerald-500' },
-                { label: 'F1-Score',  value: metrics.f1,       color: 'bg-amber-500' },
+                { label: 'ROC-AUC', value: metrics.roc_auc, color: 'bg-indigo-500' },
+                { label: 'Accuracy', value: metrics.accuracy, color: 'bg-emerald-500' },
+                { label: 'F1-Score', value: metrics.f1, color: 'bg-amber-500' },
                 { label: 'Precision', value: metrics.precision, color: 'bg-blue-500' },
-                { label: 'Recall',    value: metrics.recall,   color: 'bg-rose-500' },
+                { label: 'Recall', value: metrics.recall, color: 'bg-rose-500' },
               ].map(m => (
                 <div key={m.label}>
                   <div className="flex justify-between text-sm mb-1.5">
@@ -337,9 +337,8 @@ export default function Analytics() {
                     </td>
                     <td className="py-2.5 text-right text-slate-600">{r.total.toLocaleString('pt-BR')}</td>
                     <td className="py-2.5 text-right text-slate-600">{r.em_risco.toLocaleString('pt-BR')}</td>
-                    <td className={`py-2.5 text-right font-bold ${
-                      r.pct_risco > 70 ? 'text-red-600' : r.pct_risco > 40 ? 'text-amber-600' : 'text-emerald-600'
-                    }`}>{r.pct_risco.toFixed(1)}%</td>
+                    <td className={`py-2.5 text-right font-bold ${r.pct_risco > 70 ? 'text-red-600' : r.pct_risco > 40 ? 'text-amber-600' : 'text-emerald-600'
+                      }`}>{r.pct_risco.toFixed(1)}%</td>
                     <td className="py-2.5 pl-4 w-32">
                       <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                         <div
