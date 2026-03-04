@@ -1,3 +1,17 @@
+/**
+ * ModelMetrics.tsx — Desempenho e Explicabilidade do Modelo ML
+ *
+ * Visualiza os artefatos gerados pelo script train.py:
+ *   GET /metrics           → accuracy, ROC-AUC, F1, precision, recall,
+ *                             matriz de confusão e curva ROC
+ *   GET /feature-importance → importância relativa de cada feature
+ *
+ * Componentes visuais:
+ *   - KPI cards com as métricas principais
+ *   - Matriz de confusão colorida (TP/TN/FP/FN)
+ *   - Curva ROC com linha de baseline (classificador aleatório)
+ *   - Gráfico de barras horizontais de feature importance
+ */
 import React, { useEffect, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -5,6 +19,7 @@ import {
 } from 'recharts';
 import { CheckCircle2, Loader2, Target, Layers, TrendingUp } from 'lucide-react';
 
+/** URL base da API de produção */
 const API_URL = 'https://passos-magicos-api-chcj.onrender.com';
 
 // ── Tipos ──────────────────────────────────────────────────────────────────

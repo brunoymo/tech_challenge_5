@@ -1,11 +1,22 @@
+/**
+ * App.tsx — Componente raiz do Dashboard Passos Mágicos
+ *
+ * Responsável por:
+ * - Renderizar o layout principal (sidebar + conteúdo)
+ * - Gerenciar a aba ativa via estado local
+ * - Verificar o status da API no /health e exibir o badge de status
+ * - Rotear para os componentes Analytics, Predictor e ModelMetrics
+ */
 import React, { useState, useEffect } from 'react';
 import Analytics from './components/Analytics';
 import Predictor from './components/Predictor';
 import ModelMetrics from './components/ModelMetrics';
 import { LayoutDashboard, BrainCircuit, GraduationCap, BarChart2, ChevronRight } from 'lucide-react';
 
+/** Tipo union para as abas disponíveis na sidebar */
 type Tab = 'analytics' | 'predictor' | 'metrics';
 
+/** Configuração estática das abas da sidebar — fácil de adicionar novas abas */
 const TABS: { id: Tab; label: string; sub: string; icon: React.ReactNode }[] = [
   {
     id: 'analytics',
@@ -27,6 +38,7 @@ const TABS: { id: Tab; label: string; sub: string; icon: React.ReactNode }[] = [
   },
 ];
 
+/** Títulos e subtítulos do cabeçalho do conteúdo principal, indexados pela aba ativa */
 const HEADERS: Record<Tab, { title: string; sub: string }> = {
   analytics: {
     title: 'Dashboard Educacional',
@@ -43,16 +55,25 @@ const HEADERS: Record<Tab, { title: string; sub: string }> = {
 };
 
 export default function App() {
+  // Aba atualmente ativa — controla qual componente é renderizado no main
   const [activeTab, setActiveTab] = useState<Tab>('analytics');
+
+  // Status da API: 'checking' durante a requisição, 'online' ou 'offline' após
   const [apiStatus, setApiStatus] = useState<'checking' | 'online' | 'offline'>('checking');
 
+  /**
+   * Verifica o endpoint /health da API ao montar o componente.
+   * Considera 'online' somente se model_loaded === true (modelo carregado).
+   * A URL está hardcoded para evitar problemas com injeção de var. de ambiente
+   * no build do Render (os serviços estáticos não recebem vars em build time).
+   */
   useEffect(() => {
     const API_URL = 'https://passos-magicos-api-chcj.onrender.com';
     fetch(`${API_URL}/health`)
       .then((r) => r.json())
       .then((d) => setApiStatus(d.model_loaded ? 'online' : 'offline'))
       .catch(() => setApiStatus('offline'));
-  }, []);
+  }, []); // [] = executa apenas uma vez, na montagem
 
   const header = HEADERS[activeTab];
 

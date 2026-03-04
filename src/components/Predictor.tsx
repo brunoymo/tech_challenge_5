@@ -1,9 +1,25 @@
+/**
+ * Predictor.tsx — Simulador de Risco Individual
+ *
+ * Formulário interativo que envia os indicadores de um aluno ao endpoint
+ * POST /predict da API e exibe:
+ *   - Classificação: Em Risco ou Sem Risco
+ *   - Probabilidade de risco (0–1)
+ *   - Card explicativo com os indicadores mais relevantes
+ *
+ * Inclui valores padrão razoáveis para facilitar a demonstração.
+ */
 import React, { useState } from 'react';
 import { BrainCircuit, AlertTriangle, CheckCircle2, Loader2, RotateCcw, Info } from 'lucide-react';
 
+/** URL base da API de produção */
 const API_URL = 'https://passos-magicos-api-chcj.onrender.com';
 
-// ── Configuração dos campos ────────────────────────────────────────────────
+/**
+ * Configuração dos campos do formulário.
+ * Cada campo especifica: nome, label, incremento do slider, faixa válida e descrição.
+ * O campo INDE é destacado visualmente (highlight) por ser o índice composto principal.
+ */
 const FIELDS = [
   { name: 'Idade', label: 'Idade', step: '1', min: 6, max: 30, desc: 'Idade do aluno em anos' },
   { name: 'Fase', label: 'Fase', step: '1', min: 0, max: 8, desc: '0 = ALFA, 1–8 = fases escolares' },
@@ -19,6 +35,7 @@ const FIELDS = [
 type FieldName = (typeof FIELDS)[number]['name'];
 type FormData = Record<FieldName, number>;
 
+/** Valores padrão razoáveis para facilitar a demonstração — aluno típico sem risco */
 const DEFAULT: FormData = {
   Idade: 14, Fase: 3, IAA: 8.5, IEG: 7.0, IPS: 6.5,
   IDA: 7.5, IPV: 8.0, IAN: 7.0, INDE: 7.4,

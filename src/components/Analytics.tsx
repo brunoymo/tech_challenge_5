@@ -1,3 +1,13 @@
+/**
+ * Analytics.tsx — Dashboard de Dados Educacionais
+ *
+ * Exibe KPIs e gráficos consumindo os endpoints de analytics da API:
+ *   GET /analytics/stats       → KPIs (total alunos, INDE médio, % risco, pedras)
+ *   GET /analytics/evolucao    → Gráfico de linhas (indicadores por ano)
+ *   GET /analytics/risco-por-fase → Gráfico de barras (risco por fase)
+ *
+ * Os dados são carregados em paralelo com o hook useFetch ao montar o componente.
+ */
 import React, { useEffect, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -5,6 +15,7 @@ import {
 } from 'recharts';
 import { Users, TrendingUp, Award, AlertCircle, Loader2 } from 'lucide-react';
 
+/** URL base da API de produção (hardcoded para evitar problemas de injeção no Render) */
 const API_URL = 'https://passos-magicos-api-chcj.onrender.com';
 
 // ── Tipos ─────────────────────────────────────────────────────────────────
@@ -32,10 +43,13 @@ interface Metrics {
   recall: number;
 }
 
-// ── Cores ──────────────────────────────────────────────────────────────────
+// ── Paleta de cores por tipo de pedra ─────────────────────────────────────
+// Cores intencionais: Quartzo (cinza), Ágata (azul), Ametista (roxo), Topázio (dourado)
 const PEDRA_COLORS: Record<string, string> = {
   'Quartzo': '#94a3b8', 'Ágata': '#38bdf8', 'Ametista': '#a855f7', 'Topázio': '#fbbf24',
 };
+
+/** Configuração das linhas do gráfico de evolução temporal */
 const LINES = [
   { key: 'INDE', color: '#6366f1', label: 'INDE' },
   { key: 'IAA', color: '#10b981', label: 'IAA' },
@@ -44,7 +58,13 @@ const LINES = [
   { key: 'IPV', color: '#3b82f6', label: 'IPV' },
 ];
 
-// ── Hook reutilizável ──────────────────────────────────────────────────────
+
+// ── Hook genérico de busca de dados ───────────────────────────────────────
+/**
+ * Hook reutilizável para fetching de endpoints GET da API.
+ * Gerencia automaticamente os estados de loading, data e error.
+ * Tipado genérico para uso com qualquer schema de resposta.
+ */
 function useFetch<T>(url: string) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
