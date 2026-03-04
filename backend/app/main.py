@@ -146,18 +146,24 @@ def health_check():
 @app.get("/debug")
 def debug_paths():
     """Debug: expõe caminhos e existência de arquivos dentro do Docker."""
+    import subprocess
     csv_files = [
         os.path.join(DATA_DIR, 'dataset_2022.csv'),
         os.path.join(DATA_DIR, 'dataset_2023.csv'),
         os.path.join(DATA_DIR, 'dataset_2024.csv'),
     ]
+    app_ls = os.listdir('/app') if os.path.exists('/app') else []
+    data_ls = os.listdir('/app/data') if os.path.exists('/app/data') else 'NOT FOUND'
+    data_raw_ls = os.listdir('/app/data/raw') if os.path.exists('/app/data/raw') else 'NOT FOUND'
     return {
         "base_dir": BASE_DIR,
         "data_dir": DATA_DIR,
         "cwd": os.getcwd(),
         "csv_exists": {f: os.path.exists(f) for f in csv_files},
+        "app_ls": app_ls,
+        "data_ls": data_ls,
+        "data_raw_ls": data_raw_ls,
     }
-
 
 
 def predict(aluno: AlunoInput):
