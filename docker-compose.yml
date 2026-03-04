@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  # --- Backend: FastAPI ML API ---
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: passos_magicos_api
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  # --- Frontend: React + Vite (build de produção) ---
+  frontend:
+    image: node:20-slim
+    container_name: passos_magicos_frontend
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    # Faz build de produção e serve com vite preview (não expõe dev server)
+    command: sh -c "npm ci && npm run build && npm run preview -- --host 0.0.0.0 --port 3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped

@@ -1,0 +1,38 @@
+[
+  {
+    "feature": "IAN",
+    "importance": 0.834
+  },
+  {
+    "feature": "INDE",
+    "importance": 0.0648
+  },
+  {
+    "feature": "Fase",
+    "importance": 0.038
+  },
+  {
+    "feature": "Idade",
+    "importance": 0.0326
+  },
+  {
+    "feature": "IDA",
+    "importance": 0.0091
+  },
+  {
+    "feature": "IEG",
+    "importance": 0.0084
+  },
+  {
+    "feature": "IPV",
+    "importance": 0.0076
+  },
+  {
+    "feature": "IAA",
+    "importance": 0.0029
+  },
+  {
+    "feature": "IPS",
+    "importance": 0.0026
+  }
+]

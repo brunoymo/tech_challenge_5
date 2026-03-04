@@ -1,0 +1,27 @@
+services:
+  # Backend API
+  - type: web
+    name: passos-magicos-api
+    runtime: docker
+    env: python
+    region: ohio
+    plan: free
+    rootDir: backend
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+
+  # Frontend Dashboard
+  - type: web
+    name: passos-magicos-dashboard
+    runtime: static
+    region: ohio
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: passos-magicos-api
+          property: host
