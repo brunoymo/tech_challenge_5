@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrainCircuit, AlertTriangle, CheckCircle2, Loader2, RotateCcw, Info } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://passos-magicos-api-chcj.onrender.com';
+const API_URL = 'https://passos-magicos-api-chcj.onrender.com';
 
 // ── Configuração dos campos ────────────────────────────────────────────────
 const FIELDS = [
@@ -130,8 +130,8 @@ export default function Predictor() {
                       min={f.min}
                       max={f.max}
                       className={`w-full px-3 py-2.5 rounded-xl border text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:border-transparent ${f.highlight
-                          ? 'border-indigo-200 bg-indigo-50/40 text-indigo-700 focus:ring-indigo-400'
-                          : 'border-slate-200 bg-white text-slate-700 focus:ring-indigo-400'
+                        ? 'border-indigo-200 bg-indigo-50/40 text-indigo-700 focus:ring-indigo-400'
+                        : 'border-slate-200 bg-white text-slate-700 focus:ring-indigo-400'
                         }`}
                     />
                     {/* Mini barra de progresso dentro do campo */}
@@ -164,10 +164,10 @@ export default function Predictor() {
 
           {/* Card de resultado */}
           <div className={`flex-1 rounded-2xl border shadow-sm flex flex-col items-center justify-center p-6 min-h-64 transition-all duration-500 ${!result
-              ? 'bg-white border-slate-100'
-              : result.risco === 1
-                ? 'bg-red-50 border-red-100'
-                : 'bg-emerald-50 border-emerald-100'
+            ? 'bg-white border-slate-100'
+            : result.risco === 1
+              ? 'bg-red-50 border-red-100'
+              : 'bg-emerald-50 border-emerald-100'
             }`}>
             {!result && !loading && (
               <div className="text-center text-slate-300 space-y-3">

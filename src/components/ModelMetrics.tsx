@@ -5,7 +5,7 @@ import {
 } from 'recharts';
 import { CheckCircle2, Loader2, Target, Layers, TrendingUp } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://passos-magicos-api-chcj.onrender.com';
+const API_URL = 'https://passos-magicos-api-chcj.onrender.com';
 
 // ── Tipos ──────────────────────────────────────────────────────────────────
 interface Metrics {
@@ -177,8 +177,8 @@ export default function ModelMetrics() {
                       <div
                         key={ci}
                         className={`w-24 h-16 rounded-xl flex flex-col items-center justify-center border-2 ${isCorrect
-                            ? 'bg-emerald-50 border-emerald-200'
-                            : val === 0 ? 'bg-slate-50 border-slate-100' : 'bg-red-50 border-red-200'
+                          ? 'bg-emerald-50 border-emerald-200'
+                          : val === 0 ? 'bg-slate-50 border-slate-100' : 'bg-red-50 border-red-200'
                           }`}
                       >
                         <span className={`text-2xl font-black ${isCorrect ? 'text-emerald-700' : val === 0 ? 'text-slate-300' : 'text-red-600'}`}>

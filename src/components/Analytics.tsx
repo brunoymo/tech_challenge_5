@@ -5,7 +5,7 @@ import {
 } from 'recharts';
 import { Users, TrendingUp, Award, AlertCircle, Loader2 } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://passos-magicos-api-chcj.onrender.com';
+const API_URL = 'https://passos-magicos-api-chcj.onrender.com';
 
 // ── Tipos ─────────────────────────────────────────────────────────────────
 interface Stats {
