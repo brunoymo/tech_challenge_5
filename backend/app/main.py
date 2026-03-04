@@ -143,7 +143,23 @@ def health_check():
     }
 
 
-@app.post("/predict", response_model=PrevisaoOutput)
+@app.get("/debug")
+def debug_paths():
+    """Debug: expõe caminhos e existência de arquivos dentro do Docker."""
+    csv_files = [
+        os.path.join(DATA_DIR, 'dataset_2022.csv'),
+        os.path.join(DATA_DIR, 'dataset_2023.csv'),
+        os.path.join(DATA_DIR, 'dataset_2024.csv'),
+    ]
+    return {
+        "base_dir": BASE_DIR,
+        "data_dir": DATA_DIR,
+        "cwd": os.getcwd(),
+        "csv_exists": {f: os.path.exists(f) for f in csv_files},
+    }
+
+
+
 def predict(aluno: AlunoInput):
     if modelo is None or colunas is None:
         raise HTTPException(status_code=503, detail="Modelo não encontrado. Execute train.py primeiro.")
