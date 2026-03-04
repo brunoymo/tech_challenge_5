@@ -9,4 +9,4 @@ coverage/
 !.env.production
 .venv/
 __pycache__/
-*.pkl
+
