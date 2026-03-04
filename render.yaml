@@ -16,9 +16,6 @@ services:
     name: passos-magicos-dashboard
     buildCommand: npm install && npm run build
     staticPublishPath: dist
-
-
     envVars:
       - key: VITE_API_URL
         value: https://passos-magicos-api-chcj.onrender.com
-# Nota: Se o link da sua API mudar, você deve atualizar este valor no painel do Render (Dashboard -> Environment)
