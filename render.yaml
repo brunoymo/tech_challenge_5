@@ -12,9 +12,8 @@ services:
         value: "1"
 
   # Frontend Dashboard
-  - type: web
+  - type: static_site
     name: passos-magicos-dashboard
-    runtime: static
     buildCommand: npm install && npm run build
     staticPublishPath: dist
 
