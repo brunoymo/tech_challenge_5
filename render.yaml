@@ -12,10 +12,12 @@ services:
         value: "1"
 
   # Frontend Dashboard
-  - type: static_site
+  - type: web
     name: passos-magicos-dashboard
+    runtime: static
     buildCommand: npm install && npm run build
     staticPublishPath: dist
+
 
     envVars:
       - key: VITE_API_URL
