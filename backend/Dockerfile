@@ -28,12 +28,15 @@ COPY src/ ./src/
 # Copy pre-trained model artifacts
 COPY model/ ./model/
 
-# Copy data files explicitly (one-by-one to ensure they are included by Docker)
-RUN mkdir -p ./data/raw
-COPY data/raw/dataset_2022.csv ./data/raw/dataset_2022.csv
-COPY data/raw/dataset_2023.csv ./data/raw/dataset_2023.csv
-COPY data/raw/dataset_2024.csv ./data/raw/dataset_2024.csv
-RUN ls -la data/raw/
+# Download CSV data files from GitHub (Render build context excludes large files)
+RUN apt-get update && apt-get install -y --no-install-recommends curl && \
+  mkdir -p ./data/raw && \
+  curl -fsSL "https://raw.githubusercontent.com/brunoymo/tech_challenge_5/main/backend/data/raw/dataset_2022.csv" -o ./data/raw/dataset_2022.csv && \
+  curl -fsSL "https://raw.githubusercontent.com/brunoymo/tech_challenge_5/main/backend/data/raw/dataset_2023.csv" -o ./data/raw/dataset_2023.csv && \
+  curl -fsSL "https://raw.githubusercontent.com/brunoymo/tech_challenge_5/main/backend/data/raw/dataset_2024.csv" -o ./data/raw/dataset_2024.csv && \
+  apt-get remove -y curl && apt-get autoremove -y && rm -rf /var/lib/apt/lists/* && \
+  ls -la ./data/raw/
+
 
 
 # Expose the port that Uvicorn will listen on
