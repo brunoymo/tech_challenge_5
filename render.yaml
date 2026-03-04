@@ -20,7 +20,5 @@ services:
 
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: passos-magicos-api
-          property: host
+        value: https://passos-magicos-api-chcj.onrender.com
+# Nota: Se o link da sua API mudar, você deve atualizar este valor no painel do Render (Dashboard -> Environment)
